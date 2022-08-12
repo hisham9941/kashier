@@ -1,16 +1,8 @@
 <?php
-?>
-<link rel="stylesheet" href="style.css">
-<?php
-// $installments_period = [
-//     'Full',
-//     '2 Months',
-//     '3 Months'
-// ]; 
 require_once('config.php');
 if($connection == 1){
 ?>
-
+<link rel="stylesheet" href="style.css">
     <form action="requests/send.php" method="post" class="wpcf7-form" >
         <h1 style="text-align:center; color:white; padding-bottom:5%">Please Add Customer's Details</h1>
         <p>

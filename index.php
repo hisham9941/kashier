@@ -1,5 +1,4 @@
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -14,17 +13,13 @@
 </head>
 
 <?php
+//Require the config file and checking the connection
 require_once('config.php');
 if($connection == 1):
     $stmt = $conn->prepare("SELECT id, customer_name, customer_email, total_amount, installments_period FROM memberships");
     $stmt->execute();
 
-
-// set the resulting array to associative
 $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
-// foreach($stmt->fetchAll() as $k=>$c_data) {
-//   echo $c_data['id'];
-// }
 ?>
 <body>
     <div class="container">

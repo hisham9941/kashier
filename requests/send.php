@@ -1,7 +1,7 @@
 <?php
-
 require_once('../config.php');
 if($connection == 1){
+  //Get the data submitted by the form
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $name = $_POST["name"];
         $email = $_POST["email"];
@@ -28,17 +28,16 @@ function dbinsert($invoice_id, $name, $email, $total, $installments, $installmen
 //GET ID OF LAST INSERTED DATA
   $invoice_id = $conn->lastInsertId();
 
-  echo "New record created successfully";
+  // echo "New record created successfully";
 }
 $due_date;
 $quantity;
 $total_per_due_date;
 $due_date;
 
-      
-function requestinvoice($total, $name, $due_date, $invoice_id, $total_per_due_date){
+//Sending data to KASHIER and getting back with information needed to be saved in DB      
+function requestinvoice($total, $name, $due_date, $invoice_id, $total_per_due_date, $email){
 $curl = curl_init();
-
 curl_setopt_array($curl, array(
   CURLOPT_URL => 'https://test-api.kashier.io/paymentRequest?currency=EGP',
   CURLOPT_RETURNTRANSFER => true,
@@ -76,15 +75,30 @@ curl_setopt_array($curl, array(
 ));
 
 $response = curl_exec($curl);
-
 curl_close($curl);
-echo $response;
-
-
+// echo $response;
 $kashier_response = json_decode($response, false);
 global $kashier_id;
 $kashier_id = $kashier_response->response->_id;
-var_dump($kashier_id);
+
+//Setting Data to send first invoice after submitting the customer data
+$mail_due_date = date("Y-m-d", strtotime($kashier_response->response->dueDate));
+if($mail_due_date == date("Y-m-d")){
+  require_once('share-invoice.php');
+  $request_customr_name = $kashier_response->response->customerName;
+  $request_customer_email = $email;
+  $request_customer_payment_id = $kashier_response->response->paymentRequestId;
+  
+  shareInvoice($request_customr_name, $request_customer_email, $request_customer_payment_id);
+
+  //If response is success display message
+  if($kashier_response->status == 'SUCCESS'){
+    echo '<h1 style="text-align:center; color:green;">3ash ya kotch</h1><br>' . 
+    '<img src="../img/animation.gif" style="margin-left:auto; margin-right:auto; width:300px; display:block;"><br>' . 
+    '<a href="../add-new-customer.php" style="margin-left: auto; margin-right: auto; display: block; text-align: center;">
+    <button style="background: grey; color: #ffffff; height: 55px; width: 260px; border-radius: 20px; font-size: 20px;">Add Another +</button></a>';
+  }
+}
 }
 
 
@@ -95,27 +109,25 @@ if ($installments == 'full'){
     $quantity = 1;
     $total_per_due_date = round($total, 2);
     $installments_amount = $total_per_due_date;
-    requestinvoice($total, $name, $due_date, $invoice_id, $total_per_due_date);
+    requestinvoice($total, $name, $due_date, $invoice_id, $total_per_due_date, $email);
     dbinsert($invoice_id, $name, $email, $total, $installments, $installments_amount, $kashier_id, $conn);
     
 }elseif($installments == '2months'){
-    // $due_date = date("Y-m-d",strtotime("+2 months"));
     $quantity = 2;
     $total_per_due_date = round(($total / 2) ,2);
     $installments_amount = $total_per_due_date;
     for($i=0; $i<2; $i++){
       $invoice_id = $invoice_id + $i;
-      requestinvoice($total, $name, date("Y-m-d",strtotime("+$i months")), $invoice_id, $total_per_due_date);
+      requestinvoice($total, $name, date("Y-m-d",strtotime("+$i months")), $invoice_id, $total_per_due_date, $email);
       dbinsert($invoice_id, $name, $email, $total, $installments, $installments_amount, $kashier_id, $conn);
     }
 }elseif($installments == '3months'){
-    // $due_date = date("Y-m-d",strtotime("+3 months"));
     $quantity = 3;
     $total_per_due_date = round(($total / 3) ,2);
     $installments_amount = $total_per_due_date;
     for($i=0; $i<3; $i++){
       $invoice_id = $invoice_id + $i;
-      requestinvoice($total, $name, date("Y-m-d",strtotime("+$i months")), $invoice_id, $total_per_due_date);
+      requestinvoice($total, $name, date("Y-m-d",strtotime("+$i months")), $invoice_id, $total_per_due_date, $email);
       dbinsert($invoice_id, $name, $email, $total, $installments, $installments_amount, $kashier_id, $conn);
     }
 }

@@ -37,7 +37,7 @@ foreach($result->response->data as $response_id){
 $stmt = $conn->prepare("SELECT * FROM memberships WHERE kashier_id IN ('" . implode("','", $kashier_response_ids) . "')");
 $stmt->execute();
 $customer_get_mail_sql = $stmt->fetchAll();
-// $customer_get_mail_sql[$i]['customer_email'];
+
 
 
 $kashier_sql_list = [];
