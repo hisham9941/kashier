@@ -1,4 +1,5 @@
 <?php
+
 require_once('../config.php');
 
 $curl = curl_init();
@@ -62,7 +63,7 @@ foreach($customer_get_mail_sql as $customer_email){
                     <th class="containerTable-lblTitle">ID</th>
                     <th class="containerTable-lblTitle">Customer Name</th>
                     <th class="containerTable-lblTitle">Customer Email</th>
-                    <th class="containerTable-lblTitle">Kashier ID</th>
+                    <th class="containerTable-lblTitle">Due Date</th>
                     <th class="containerTable-lblTitle">Payment Status</th>
                 </tr>
             </thead>

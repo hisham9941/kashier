@@ -97,6 +97,8 @@ if($mail_due_date == date("Y-m-d")){
     '<img src="../img/animation.gif" style="margin-left:auto; margin-right:auto; width:300px; display:block;"><br>' . 
     '<a href="../add-new-customer.php" style="margin-left: auto; margin-right: auto; display: block; text-align: center;">
     <button style="background: grey; color: #ffffff; height: 55px; width: 260px; border-radius: 20px; font-size: 20px;">Add Another +</button></a>';
+  }else{
+    echo '<h1 style="color:red; text-align:center;">Something Went Wrong</h1>';
   }
 }
 }

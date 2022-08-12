@@ -27,12 +27,12 @@ if($connection == 1){
       </p>
   </form>
 <?php 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  $name = $_POST["name"];
-  $email = $_POST["email"];
-  $total = $_POST["total"];
-  $installments = $_POST["installments"];
-}
+// if ($_SERVER["REQUEST_METHOD"] == "POST") {
+//   $name = $_POST["name"];
+//   $email = $_POST["email"];
+//   $total = $_POST["total"];
+//   $installments = $_POST["installments"];
+// }
 
 
 }else{
